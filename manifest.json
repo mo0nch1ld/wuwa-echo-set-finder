@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "WUWA Echo Set Finder",
+  "description": "Показывает, для каких персонажей используется выбранный Echo-сет в Wuthering Waves.",
+  "version": "1.0.0",
+  "action": {
+    "default_title": "WUWA Echo Set Finder",
+    "default_popup": "popup.html"
+  },
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://wuwaguide.kurogames.com/*"
+  ]
+}

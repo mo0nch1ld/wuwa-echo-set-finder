@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WUWA Echo Finder</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="card">
+      <h1>Echo Set Finder</h1>
+      <p class="sub">Выбери Echo-сет и получи список персонажей</p>
+
+      <p class="label">Echo-сет</p>
+      <div class="dropdown" id="echoDropdown">
+        <button type="button" id="echoDropdownButton" class="dropdown-button" aria-haspopup="listbox" aria-expanded="false">
+          <img id="selectedSetIcon" class="set-icon" src="" alt="" />
+          <span id="selectedSetName">Выбери сет...</span>
+          <span class="dropdown-arrow">▾</span>
+        </button>
+        <ul id="echoSetList" class="set-list" role="listbox" hidden></ul>
+      </div>
+
+      <section class="result">
+        <h2>Используют этот сет:</h2>
+        <ul id="characters"></ul>
+      </section>
+
+      <p id="hint" class="hint"></p>
+    </main>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
