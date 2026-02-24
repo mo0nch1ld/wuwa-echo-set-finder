@@ -2,8 +2,30 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="refresh" content="0; url=index.html" />
-    <title>Redirecting...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WUWA Echo Finder</title>
+    <link rel="stylesheet" href="popup.css" />
   </head>
-  <body></body>
+  <body>
+    <main class="card">
+      <h1>Echo Set Finder</h1>
+      <p class="sub">Pick an Echo set to see its characters</p>
+
+      <div class="dropdown" id="echoDropdown">
+        <button type="button" id="echoDropdownButton" class="dropdown-button" aria-haspopup="listbox" aria-expanded="false">
+          <img id="selectedSetIcon" class="set-icon" src="" alt="" />
+          <span id="selectedSetName">Choose a set...</span>
+          <span class="dropdown-arrow">▾</span>
+        </button>
+        <ul id="echoSetList" class="set-list" role="listbox" hidden></ul>
+      </div>
+
+      <section class="result">
+        <h2>Characters using this set:</h2>
+        <ul id="characters"></ul>
+      </section>
+    </main>
+
+    <script type="module" src="popup.js"></script>
+  </body>
 </html>

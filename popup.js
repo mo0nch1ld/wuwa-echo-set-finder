@@ -1,4 +1,11 @@
-import { initEchoFinder } from "./app-core.js";
+import {
+  echoSetToCharacters,
+  getSortedSetNames,
+  renderCharacters,
+  renderSetList,
+  setActiveSet,
+  setSelectedSetIcon,
+} from "./app-core.js";
 
 const extensionStorage = {
   setSelectedEchoSet(setName) {
@@ -15,4 +22,54 @@ const extensionStorage = {
   },
 };
 
-void initEchoFinder(extensionStorage);
+const dropdown = document.getElementById("echoDropdown");
+const dropdownButton = document.getElementById("echoDropdownButton");
+const selectedSetIcon = document.getElementById("selectedSetIcon");
+const selectedSetName = document.getElementById("selectedSetName");
+const setList = document.getElementById("echoSetList");
+const charactersList = document.getElementById("characters");
+
+function toggleDropdown(open) {
+  const shouldOpen = typeof open === "boolean" ? open : setList.hidden;
+  setList.hidden = !shouldOpen;
+  dropdownButton.setAttribute("aria-expanded", String(shouldOpen));
+}
+
+async function selectSet(setName) {
+  renderCharacters(charactersList, setName);
+  setActiveSet(setList, setName);
+  setSelectedSetIcon(selectedSetIcon, selectedSetName, setName);
+  await extensionStorage.setSelectedEchoSet(setName);
+  toggleDropdown(false);
+}
+
+async function initPopup() {
+  const setNames = getSortedSetNames();
+  renderSetList(setList, setNames, selectSet);
+
+  dropdownButton.addEventListener("click", () => toggleDropdown());
+
+  document.addEventListener("click", (event) => {
+    if (!dropdown.contains(event.target)) {
+      toggleDropdown(false);
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      toggleDropdown(false);
+    }
+  });
+
+  const savedSet = await extensionStorage.getSelectedEchoSet();
+  if (savedSet && echoSetToCharacters[savedSet]) {
+    await selectSet(savedSet);
+    return;
+  }
+
+  if (setNames.length > 0 && echoSetToCharacters[setNames[0]]) {
+    await selectSet(setNames[0]);
+  }
+}
+
+void initPopup();

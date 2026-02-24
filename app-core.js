@@ -75,126 +75,83 @@ function setImageFromCandidates(image, candidates, onMissing) {
   tryNext();
 }
 
-export async function initEchoFinder(storage) {
-  const dropdown = document.getElementById("echoDropdown");
-  const dropdownButton = document.getElementById("echoDropdownButton");
-  const selectedSetIcon = document.getElementById("selectedSetIcon");
-  const selectedSetName = document.getElementById("selectedSetName");
-  const setList = document.getElementById("echoSetList");
-  const charactersList = document.getElementById("characters");
+export function getSortedSetNames() {
+  return Object.keys(echoSetToCharacters).sort((a, b) => a.localeCompare(b));
+}
 
-  function toggleDropdown(open) {
-    const shouldOpen = typeof open === "boolean" ? open : setList.hidden;
-    setList.hidden = !shouldOpen;
-    dropdownButton.setAttribute("aria-expanded", String(shouldOpen));
-  }
+export function renderCharacters(charactersList, setName) {
+  const characters = echoSetToCharacters[setName] || [];
+  charactersList.innerHTML = "";
 
-  function setActiveSet(setName) {
-    const buttons = setList.querySelectorAll(".set-item");
-    for (const button of buttons) {
-      button.classList.toggle("active", button.dataset.setName === setName);
-    }
-  }
-
-  function renderCharacters(setName) {
-    const characters = echoSetToCharacters[setName] || [];
-    charactersList.innerHTML = "";
-
-    if (characters.length === 0) {
-      const item = document.createElement("li");
-      item.textContent = "No data for this set.";
-      charactersList.appendChild(item);
-      return;
-    }
-
-    for (const name of characters) {
-      const item = document.createElement("li");
-      const frame = document.createElement("div");
-      const icon = document.createElement("img");
-      const nameSpan = document.createElement("span");
-
-      frame.className = "character-frame";
-      icon.className = "character-icon";
-      icon.alt = `${name} icon`;
-      setImageFromCandidates(icon, getCharacterIconCandidates(name), () => {
-        icon.style.display = "none";
-      });
-
-      nameSpan.className = "character-name";
-      nameSpan.textContent = name;
-
-      frame.appendChild(icon);
-      item.appendChild(frame);
-      item.appendChild(nameSpan);
-      charactersList.appendChild(item);
-    }
-  }
-
-  async function selectSet(setName) {
-    renderCharacters(setName);
-    setActiveSet(setName);
-    selectedSetName.textContent = setName;
-    await storage.setSelectedEchoSet(setName);
-    toggleDropdown(false);
-    selectedSetIcon.alt = `${setName} icon`;
-    setImageFromCandidates(selectedSetIcon, getSetIconCandidates(setName));
-  }
-
-  function renderSetList(setNames) {
-    setList.innerHTML = "";
-
-    for (const setName of setNames) {
-      const listItem = document.createElement("li");
-      const button = document.createElement("button");
-      const icon = document.createElement("img");
-      const name = document.createElement("span");
-
-      button.type = "button";
-      button.className = "set-item";
-      button.dataset.setName = setName;
-      button.addEventListener("click", () => {
-        void selectSet(setName);
-      });
-
-      icon.className = "set-icon";
-      icon.alt = `${setName} icon`;
-      setImageFromCandidates(icon, getSetIconCandidates(setName));
-
-      name.className = "set-name";
-      name.textContent = setName;
-
-      button.appendChild(icon);
-      button.appendChild(name);
-      listItem.appendChild(button);
-      setList.appendChild(listItem);
-    }
-  }
-
-  const setNames = Object.keys(echoSetToCharacters).sort((a, b) => a.localeCompare(b));
-
-  renderSetList(setNames);
-
-  dropdownButton.addEventListener("click", () => toggleDropdown());
-
-  document.addEventListener("click", (event) => {
-    if (!dropdown.contains(event.target)) {
-      toggleDropdown(false);
-    }
-  });
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      toggleDropdown(false);
-    }
-  });
-
-  const savedSet = await storage.getSelectedEchoSet();
-  if (savedSet && echoSetToCharacters[savedSet]) {
-    await selectSet(savedSet);
+  if (characters.length === 0) {
+    const item = document.createElement("li");
+    item.textContent = "No data for this set.";
+    charactersList.appendChild(item);
     return;
   }
 
-  if (setNames.length > 0 && echoSetToCharacters[setNames[0]]) {
-    await selectSet(setNames[0]);
+  for (const name of characters) {
+    const item = document.createElement("li");
+    const frame = document.createElement("div");
+    const icon = document.createElement("img");
+    const nameSpan = document.createElement("span");
+
+    frame.className = "character-frame";
+    icon.className = "character-icon";
+    icon.alt = `${name} icon`;
+    setImageFromCandidates(icon, getCharacterIconCandidates(name), () => {
+      icon.style.display = "none";
+    });
+
+    nameSpan.className = "character-name";
+    nameSpan.textContent = name;
+
+    frame.appendChild(icon);
+    item.appendChild(frame);
+    item.appendChild(nameSpan);
+    charactersList.appendChild(item);
   }
+}
+
+export function setActiveSet(setList, setName) {
+  const buttons = setList.querySelectorAll(".set-item");
+  for (const button of buttons) {
+    button.classList.toggle("active", button.dataset.setName === setName);
+  }
+}
+
+export function renderSetList(setList, setNames, onSelect) {
+  setList.innerHTML = "";
+
+  for (const setName of setNames) {
+    const listItem = document.createElement("li");
+    const button = document.createElement("button");
+    const icon = document.createElement("img");
+    const name = document.createElement("span");
+
+    button.type = "button";
+    button.className = "set-item";
+    button.dataset.setName = setName;
+    button.addEventListener("click", () => {
+      void onSelect(setName);
+    });
+
+    icon.className = "set-icon";
+    icon.alt = `${setName} icon`;
+    setImageFromCandidates(icon, getSetIconCandidates(setName));
+
+    name.className = "set-name";
+    name.textContent = setName;
+
+    button.appendChild(icon);
+    button.appendChild(name);
+    listItem.appendChild(button);
+    setList.appendChild(listItem);
+  }
+}
+
+export function setSelectedSetIcon(selectedSetIcon, selectedSetName, setName) {
+  selectedSetName.textContent = setName;
+  selectedSetIcon.alt = `${setName} icon`;
+  setImageFromCandidates(selectedSetIcon, getSetIconCandidates(setName));
 }

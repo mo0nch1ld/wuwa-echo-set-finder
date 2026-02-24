@@ -40,10 +40,11 @@ You can add/remove sets and characters there.
 
 ## Shared code structure (site + extension)
 
-- `app-core.js` — shared UI/data logic.
-- `site.js` — website entry point (`localStorage`).
-- `popup.js` — extension entry point (`chrome.storage.local`).
-- `index.html` — shared page used by both local website and extension popup.
+- `app-core.js` — shared data and render helpers.
+- `site.js` — website-specific behavior (grid UI + `localStorage`).
+- `popup.js` — extension-specific behavior (dropdown UI + `chrome.storage.local`).
+- `index.html` — local website page (grid of Echo sets).
+- `popup.html` — extension popup page (dropdown selector).
 
 ## Add icons
 

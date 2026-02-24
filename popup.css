@@ -109,6 +109,24 @@ h1 {
   z-index: 2;
 }
 
+.set-picker {
+  border: 1px solid #3d3d46;
+  border-radius: 8px;
+  background: #6c5f4d;
+  padding: 8px;
+}
+
+.set-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 220px;
+  overflow: auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
 .set-item {
   width: 100%;
   border: 0;
@@ -129,12 +147,25 @@ h1 {
   border-bottom: 0;
 }
 
+.set-grid .set-item {
+  border: 1px solid #3a3a42;
+  border-radius: 8px;
+  background: #5f5344;
+  padding: 6px 8px;
+  font-size: 13px;
+}
+
 .set-item:hover {
   background: #ab9269;
 }
 
 .set-item.active {
   background: #ab9269;
+}
+
+.set-grid .set-item:hover,
+.set-grid .set-item.active {
+  color: #ece5d8;
 }
 
 .set-icon {
