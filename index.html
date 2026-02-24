@@ -6,13 +6,26 @@
     <title>WUWA Echo Finder</title>
     <link rel="stylesheet" href="popup.css" />
   </head>
-  <body>
+  <body class="site-mode">
     <main class="card">
       <h1>Echo Set Finder</h1>
       <p class="sub">Pick an Echo set to see its characters</p>
 
       <section class="set-picker" aria-label="Echo sets">
         <ul id="echoSetList" class="set-grid" role="listbox"></ul>
+      </section>
+
+      <section class="set-description" id="setDescription" hidden>
+        <div class="set-description-grid">
+          <div class="effect-block">
+            <h3 class="effect-label" id="setEffectPrimaryLabel">2-piece Effect</h3>
+            <p id="setEffectPrimaryText"></p>
+          </div>
+          <div class="effect-block" id="setEffectSecondary">
+            <h3 class="effect-label" id="setEffectSecondaryLabel">5-piece Effect</h3>
+            <p id="setEffectSecondaryText"></p>
+          </div>
+        </div>
       </section>
 
       <section class="result">

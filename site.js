@@ -3,6 +3,7 @@ import {
   getSortedSetNames,
   renderCharacters,
   renderSetList,
+  renderSetDescription,
   setActiveSet,
 } from "./app-core.js";
 
@@ -18,8 +19,17 @@ const siteStorage = {
 
 const setList = document.getElementById("echoSetList");
 const charactersList = document.getElementById("characters");
+const descriptionElements = {
+  section: document.getElementById("setDescription"),
+  primaryLabel: document.getElementById("setEffectPrimaryLabel"),
+  primaryText: document.getElementById("setEffectPrimaryText"),
+  secondaryWrapper: document.getElementById("setEffectSecondary"),
+  secondaryLabel: document.getElementById("setEffectSecondaryLabel"),
+  secondaryText: document.getElementById("setEffectSecondaryText"),
+};
 
 async function selectSet(setName) {
+  renderSetDescription(descriptionElements, setName);
   renderCharacters(charactersList, setName);
   setActiveSet(setList, setName);
   await siteStorage.setSelectedEchoSet(setName);

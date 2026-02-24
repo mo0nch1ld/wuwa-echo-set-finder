@@ -3,6 +3,7 @@ import {
   getSortedSetNames,
   renderCharacters,
   renderSetList,
+  renderSetDescription,
   setActiveSet,
   setSelectedSetIcon,
 } from "./app-core.js";
@@ -28,6 +29,14 @@ const selectedSetIcon = document.getElementById("selectedSetIcon");
 const selectedSetName = document.getElementById("selectedSetName");
 const setList = document.getElementById("echoSetList");
 const charactersList = document.getElementById("characters");
+const descriptionElements = {
+  section: document.getElementById("setDescription"),
+  primaryLabel: document.getElementById("setEffectPrimaryLabel"),
+  primaryText: document.getElementById("setEffectPrimaryText"),
+  secondaryWrapper: document.getElementById("setEffectSecondary"),
+  secondaryLabel: document.getElementById("setEffectSecondaryLabel"),
+  secondaryText: document.getElementById("setEffectSecondaryText"),
+};
 
 function toggleDropdown(open) {
   const shouldOpen = typeof open === "boolean" ? open : setList.hidden;
@@ -36,6 +45,7 @@ function toggleDropdown(open) {
 }
 
 async function selectSet(setName) {
+  renderSetDescription(descriptionElements, setName);
   renderCharacters(charactersList, setName);
   setActiveSet(setList, setName);
   setSelectedSetIcon(selectedSetIcon, selectedSetName, setName);
