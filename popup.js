@@ -28,7 +28,12 @@ const dropdownButton = document.getElementById("echoDropdownButton");
 const selectedSetIcon = document.getElementById("selectedSetIcon");
 const selectedSetName = document.getElementById("selectedSetName");
 const setList = document.getElementById("echoSetList");
-const charactersList = document.getElementById("characters");
+const characterElements = {
+  section: document.getElementById("charactersSection"),
+  grid: document.querySelector(".characters-grid"),
+  recommendedList: document.getElementById("charactersRecommended"),
+  alternativeList: document.getElementById("charactersAlternative"),
+};
 const descriptionElements = {
   section: document.getElementById("setDescription"),
   primaryLabel: document.getElementById("setEffectPrimaryLabel"),
@@ -46,7 +51,7 @@ function toggleDropdown(open) {
 
 async function selectSet(setName) {
   renderSetDescription(descriptionElements, setName);
-  renderCharacters(charactersList, setName);
+  renderCharacters(characterElements, setName);
   setActiveSet(setList, setName);
   setSelectedSetIcon(selectedSetIcon, selectedSetName, setName);
   await extensionStorage.setSelectedEchoSet(setName);

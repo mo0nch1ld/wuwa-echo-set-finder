@@ -18,7 +18,12 @@ const siteStorage = {
 };
 
 const setList = document.getElementById("echoSetList");
-const charactersList = document.getElementById("characters");
+const characterElements = {
+  section: document.getElementById("charactersSection"),
+  grid: document.querySelector(".characters-grid"),
+  recommendedList: document.getElementById("charactersRecommended"),
+  alternativeList: document.getElementById("charactersAlternative"),
+};
 const descriptionElements = {
   section: document.getElementById("setDescription"),
   primaryLabel: document.getElementById("setEffectPrimaryLabel"),
@@ -30,7 +35,7 @@ const descriptionElements = {
 
 async function selectSet(setName) {
   renderSetDescription(descriptionElements, setName);
-  renderCharacters(charactersList, setName);
+  renderCharacters(characterElements, setName);
   setActiveSet(setList, setName);
   await siteStorage.setSelectedEchoSet(setName);
 }

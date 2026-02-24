@@ -22,9 +22,40 @@ export const echoSetToCharacters = {
   "Halo of Starry Radiance": ["Mornye"],
   "Pact of Neonlight Leap": ["Lynae"],
   "Trailblazing Star": ["Aemeath"],
+  "Chromatic Foam": [],
+  "Sound of True Name": [],
 };
 
-// Display order for Echo Sets (change numbers to reorder)
+export const echoSetAlternatives = {
+  "Freezing Frost": ["Carlotta"],
+  "Molten Rift": ["Encore"],
+  "Void Thunder": [],
+  "Sierra Gale": [],
+  "Celestial Light": ["Zani"],
+  "Havoc Eclipse": [],
+  "Rejuvenating Glow": ["Shorekeeper","Verina"],
+  "Moonlit Clouds": ["Phoebe","Yinlin","Jianxin","Ciaccona"],
+  "Frosty Resolve": [],
+  "Eternal Radiance": [],
+  "Empyrean Anthem": [],
+  "Tidebreaking Courage": [],
+  "Gusts of Welkin": ["Aero Rover"],
+  "Windward Pilgrimage": ["Cartethyia"],
+  "Flaming Clawprint": ["Aemeath"],
+  "Dream of the Lost": ["Phrolova"],
+  "Crown of Valor": [],
+  "Law of Harmony": [],
+  "Flamewing's Shadow": [],
+  "Thread of Severed Fate": [],
+  "Halo of Starry Radiance": [],
+  "Pact of Neonlight Leap": [],
+  "Trailblazing Star": [],
+  "Midnight Veil": ["Cantarella","Phrolova"],
+  "Chromatic Foam": [],
+  "Sound of True Name": [],
+  "Lingering Tunes": ["Camellya","Xiangli Yao","Jinhsi","Changli","Jiyan","Calcharo","Lingyang","Phrolova"],
+};
+
 export const echoSetDisplayOrder = {
   "Freezing Frost": 1,
   "Molten Rift": 2,
@@ -34,7 +65,7 @@ export const echoSetDisplayOrder = {
   "Havoc Eclipse": 6,
   "Rejuvenating Glow": 7,
   "Moonlit Clouds": 8,
-  "Lingering Tune": 9,
+  "Lingering Tunes": 9,
   "Frosty Resolve": 10,
   "Eternal Radiance": 11,
   "Midnight Veil": 12,
@@ -50,11 +81,12 @@ export const echoSetDisplayOrder = {
   "Thread of Severed Fate": 22,
   "Halo of Starry Radiance": 23,
   "Pact of Neonlight Leap": 24,
-  "Rite of Glided Revelation": 25,
+  "Rite of Gilded Revelation": 25,
   "Trailblazing Star": 26,
+  "Chromatic Foam": 27,
+  "Sound of True Name": 28,
 };
 
-// Echo Set descriptions (add your descriptions here)
 export const echoSetDescriptions = {
   "Freezing Frost": {
     type: "double",
@@ -171,7 +203,7 @@ export const echoSetDescriptions = {
     twoPiece: "Spectro DMG +10%.",
     fivePiece: "Casting Outro Skill increases the ATK of the incoming Resonator who casts Intro Skill by 15%. Each point of Tune Break Boost the incoming Resonator has additionally increases their ATK by 0.3%, up to 15%. This effect lasts for 15s, or until the Resonator is switched out.",
   },
-  "Rite of Glided Revelation": {
+  "Rite of Gilded Revelation": {
     type: "double",
     twoPiece: "Spectro DMG +10%.",
     fivePiece: "Dealing Basic Attack DMG increases Spectro DMG by 10% for 5s, stacking up to 3 times. With 3 stacks, casting Resonance Liberation grants 40% Basic Attack DMG Bonus.",
@@ -181,50 +213,58 @@ export const echoSetDescriptions = {
     twoPiece: "Fusion DMG +10%.",
     fivePiece: "Inflicting Fusion Burst or Tune Rupture - Shifting on enemies increases the Resonator's Crit. Rate by 20% and grants 20% Fusion DMG Bonus for 8s.",
   },
+  "Chromatic Foam": {
+    type: "double",
+    twoPiece: "",
+    fivePiece: "",
+  },
+  "Sound of True Name": {
+    type: "double",
+    twoPiece: "",
+    fivePiece: "",
+  },
 };
 
-function getSetSlug(setName) {
-  return setName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+// Helper: Create slug from name
+function createSlug(name) {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
+
+// Helper: Get icon candidates for any type
+function getIconCandidates(folder, name) {
+  let slug = createSlug(name);
+  
+  // Special case for Rover characters
+  if (name.includes("Rover")) {
+    slug = "rover";
+  }
+  
+  return [
+    `assets/${folder}/${slug}.webp`,
+    `assets/${folder}/${slug}.png`,
+  ];
 }
 
 function getSetIconCandidates(setName) {
-  const slug = getSetSlug(setName);
-  return [
-    `assets/echo-set-icons/${slug}.webp`,
-    `assets/echo-set-icons/${slug}.png`,
-  ];
-}
-
-function getCharacterSlug(characterName) {
-  return characterName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+  return getIconCandidates("echo-set-icons", setName);
 }
 
 function getCharacterIconCandidates(characterName) {
-  let slug = getCharacterSlug(characterName);
-
-  if (characterName.includes("Rover")) {
-    slug = "rover";
-  }
-
-  return [
-    `assets/character-icons/${slug}.webp`,
-    `assets/character-icons/${slug}.png`,
-  ];
+  return getIconCandidates("character-icons", characterName);
 }
 
+// Helper: Set image source from candidates
 function setImageFromCandidates(image, candidates, onMissing) {
   let index = 0;
 
   function tryNext() {
     if (index >= candidates.length) {
-      if (onMissing) {
-        onMissing();
-      }
+      if (onMissing) onMissing();
       return;
     }
 
     image.onerror = () => {
-      index += 1;
+      index++;
       tryNext();
     };
 
@@ -234,8 +274,16 @@ function setImageFromCandidates(image, candidates, onMissing) {
   tryNext();
 }
 
+// Helper: Create DOM element with attributes
+function createElement(tag, className, textContent) {
+  const element = document.createElement(tag);
+  if (className) element.className = className;
+  if (textContent) element.textContent = textContent;
+  return element;
+}
+
 export function getSortedSetNames() {
-  return Object.keys(echoSetToCharacters).sort((a, b) => {
+  return Object.keys(echoSetDisplayOrder).sort((a, b) => {
     const orderA = echoSetDisplayOrder[a] ?? 999;
     const orderB = echoSetDisplayOrder[b] ?? 999;
     return orderA - orderB;
@@ -253,8 +301,8 @@ export function renderSetDescription(elements, setName) {
   const isSingle = description.type === "single";
   const primaryText = isSingle ? description.threePiece : description.twoPiece;
   const secondaryText = isSingle ? "" : description.fivePiece;
-  const hasPrimary = Boolean(primaryText && primaryText.trim());
-  const hasSecondary = Boolean(secondaryText && secondaryText.trim());
+  const hasPrimary = Boolean(primaryText?.trim());
+  const hasSecondary = Boolean(secondaryText?.trim());
 
   if (!hasPrimary && !hasSecondary) {
     elements.section.hidden = true;
@@ -266,47 +314,66 @@ export function renderSetDescription(elements, setName) {
   elements.primaryLabel.textContent = isSingle ? "3-piece Effect" : "2-piece Effect";
   elements.primaryText.textContent = primaryText || "";
 
-  if (isSingle) {
-    elements.secondaryWrapper.hidden = true;
-  } else {
-    elements.secondaryWrapper.hidden = false;
+  elements.secondaryWrapper.hidden = isSingle;
+  if (!isSingle) {
     elements.secondaryLabel.textContent = "5-piece Effect";
     elements.secondaryText.textContent = secondaryText || "";
   }
 }
 
-export function renderCharacters(charactersList, setName) {
+export function renderCharacters(elements, setName) {
   const characters = echoSetToCharacters[setName] || [];
-  charactersList.innerHTML = "";
+  const alternatives = echoSetAlternatives[setName] || [];
+  
+  const { section, grid, recommendedList, alternativeList } = elements;
+  
+  recommendedList.innerHTML = "";
+  alternativeList.innerHTML = "";
 
-  if (characters.length === 0) {
-    const item = document.createElement("li");
-    item.textContent = "No data for this set.";
-    charactersList.appendChild(item);
+  // If both lists are empty, hide entire section
+  if (characters.length === 0 && alternatives.length === 0) {
+    section.hidden = true;
     return;
   }
 
-  for (const name of characters) {
-    const item = document.createElement("li");
-    const frame = document.createElement("div");
-    const icon = document.createElement("img");
-    const nameSpan = document.createElement("span");
+  section.hidden = false;
+  grid.hidden = false;
 
-    frame.className = "character-frame";
-    icon.className = "character-icon";
-    icon.alt = `${name} icon`;
-    setImageFromCandidates(icon, getCharacterIconCandidates(name), () => {
-      icon.style.display = "none";
-    });
-
-    nameSpan.className = "character-name";
-    nameSpan.textContent = name;
-
-    frame.appendChild(icon);
-    item.appendChild(frame);
-    item.appendChild(nameSpan);
-    charactersList.appendChild(item);
+  // Render recommended characters
+  if (characters.length === 0) {
+    recommendedList.hidden = true;
+  } else {
+    recommendedList.hidden = false;
+    characters.forEach(name => recommendedList.appendChild(createCharacterCard(name)));
   }
+
+  // Render alternative characters
+  if (alternatives.length === 0) {
+    alternativeList.hidden = true;
+  } else {
+    alternativeList.hidden = false;
+    alternatives.forEach(name => alternativeList.appendChild(createCharacterCard(name)));
+  }
+}
+
+function createCharacterCard(name) {
+  const item = createElement("li");
+  const wrapper = createElement("div", "character-card-content");
+
+  const frame = createElement("div", "character-frame");
+  const icon = createElement("img", "character-icon");
+  icon.alt = `${name} icon`;
+  setImageFromCandidates(icon, getCharacterIconCandidates(name), () => {
+    icon.style.display = "none";
+  });
+
+  const nameSpan = createElement("span", "character-name", name);
+
+  frame.appendChild(icon);
+  wrapper.appendChild(frame);
+  wrapper.appendChild(nameSpan);
+  item.appendChild(wrapper);
+  return item;
 }
 
 export function setActiveSet(setList, setName) {
@@ -319,31 +386,24 @@ export function setActiveSet(setList, setName) {
 export function renderSetList(setList, setNames, onSelect) {
   setList.innerHTML = "";
 
-  for (const setName of setNames) {
-    const listItem = document.createElement("li");
-    const button = document.createElement("button");
-    const icon = document.createElement("img");
-    const name = document.createElement("span");
-
+  setNames.forEach(setName => {
+    const listItem = createElement("li");
+    const button = createElement("button", "set-item");
     button.type = "button";
-    button.className = "set-item";
     button.dataset.setName = setName;
-    button.addEventListener("click", () => {
-      void onSelect(setName);
-    });
+    button.addEventListener("click", () => void onSelect(setName));
 
-    icon.className = "set-icon";
+    const icon = createElement("img", "set-icon");
     icon.alt = `${setName} icon`;
     setImageFromCandidates(icon, getSetIconCandidates(setName));
 
-    name.className = "set-name";
-    name.textContent = setName;
+    const name = createElement("span", "set-name", setName);
 
     button.appendChild(icon);
     button.appendChild(name);
     listItem.appendChild(button);
     setList.appendChild(listItem);
-  }
+  });
 }
 
 export function setSelectedSetIcon(selectedSetIcon, selectedSetName, setName) {

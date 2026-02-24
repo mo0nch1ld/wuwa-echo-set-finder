@@ -306,28 +306,66 @@ h2 {
   margin: 0 0 16px;
 }
 
+.characters-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.site-mode .characters-grid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.characters-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.column-title {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: #aa9b6a;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+
+.site-mode .column-title {
+  font-size: 16px;
+  margin: 0 0 12px;
+}
+
+#charactersRecommended,
+#charactersAlternative,
 #characters {
   margin: 0;
   padding: 8px;
   max-height: 280px;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: visible;
   list-style: none;
   display: grid;
   grid-template-columns: repeat(auto-fill, 94px);
   gap: 8px;
 }
 
+.site-mode #charactersRecommended,
+.site-mode #charactersAlternative,
 .site-mode #characters {
   max-height: none;
   overflow: visible;
   grid-template-columns: repeat(auto-fill, 140px);
   gap: 12px;
-  padding: 12px 0;
+  padding: 0;
 }
 
+#charactersRecommended li,
+#charactersAlternative li,
 #characters li {
   --card-bg: #6c5f4d;
 
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -342,11 +380,15 @@ h2 {
   /* flex-shrink: 0; */
 }
 
+.site-mode #charactersRecommended li,
+.site-mode #charactersAlternative li,
 .site-mode #characters li {
   width: 140px;
   padding: 6px 6px 12px;
 }
 
+#charactersRecommended li:hover,
+#charactersAlternative li:hover,
 #characters li:hover {
   --card-bg: #ab9269;
 
@@ -411,4 +453,39 @@ h2 {
   margin-top: 10px;
   font-size: 11px;
   color: #aa9b6a;
+}
+
+.character-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  position: relative;
+}
+
+.character-alternative {
+  font-size: 10px;
+  line-height: 1.3;
+  color: #aa9b6a;
+  margin-top: 6px;
+  text-align: center;
+  padding: 0 4px;
+}
+
+.site-mode .character-alternative {
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.no-data {
+  font-size: 12px;
+  color: #6c5f4d;
+  text-align: center;
+  padding: 20px;
+  font-style: italic;
+}
+
+.site-mode .no-data {
+  font-size: 14px;
+  padding: 30px;
 }
