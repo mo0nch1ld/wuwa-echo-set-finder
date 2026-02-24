@@ -147,7 +147,7 @@ function renderCharacters(setName) {
 
   if (characters.length === 0) {
     const item = document.createElement("li");
-    item.textContent = "Нет данных для этого сета.";
+    item.textContent = "No data for this set.";
     charactersList.appendChild(item);
     return;
   }

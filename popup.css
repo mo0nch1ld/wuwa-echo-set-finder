@@ -1,12 +1,46 @@
+@font-face {
+  font-family: "OtherLang";
+  src: url("assets/fonts/otherLang-db63214f.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   color-scheme: dark;
-  font-family: Inter, Segoe UI, Arial, sans-serif;
+  font-family: "OtherLang", "Segoe UI", Arial, sans-serif;
 }
 
 body {
   margin: 0;
   background: #1e1b1c;
   color: #aa9b6a;
+  font-family: "OtherLang", "Segoe UI", Arial, sans-serif;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #ab9269 #2a221c;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #2a221c;
+  border-radius: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #ab9269;
+  border-radius: 8px;
+  border: 1px solid #6c5f4d;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #c6a97a;
 }
 
 .card {
@@ -44,6 +78,7 @@ h1 {
   color: #ece5d8;
   padding: 8px;
   font-size: 14px;
+  font-family: inherit;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -82,6 +117,7 @@ h1 {
   color: #aa9b6a;
   padding: 8px;
   font-size: 14px;
+  font-family: inherit;
   text-align: left;
   cursor: pointer;
   display: flex;

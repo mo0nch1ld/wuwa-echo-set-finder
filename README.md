@@ -1,39 +1,39 @@
 ﻿# WUWA Echo Set Finder (Opera Extension)
 
-Расширение для Opera (поддерживает Chrome Extension Manifest V3):
+Opera extension (Chrome Extension Manifest V3 compatible):
 
-- выбираешь Echo-сет в popup;
-- получаешь список персонажей, для которых этот сет используется.
+- pick an Echo set in the popup;
+- see the list of characters that use it.
 
-## Как установить в Opera
+## Install in Opera
 
-1. Открой страницу `opera://extensions`.
-2. Включи **Режим разработчика**.
-3. Нажми **Загрузить распакованное расширение**.
-4. Выбери папку проекта `wuwa extension`.
+1. Open `opera://extensions`.
+2. Enable **Developer mode**.
+3. Click **Load unpacked**.
+4. Select the `wuwa extension` project folder.
 
-## Как пользоваться
+## How to use
 
-1. Открой сайт https://wuwaguide.kurogames.com/.
-2. Нажми на иконку расширения.
-3. В выпадающем списке выбери Echo-сет.
-4. Ниже появится список персонажей.
+1. Open https://wuwaguide.kurogames.com/.
+2. Click the extension icon.
+3. Choose an Echo set from the dropdown.
+4. The character list appears below.
 
-## Где менять базу сетов
+## Edit the set database
 
-Словарь находится в файле `popup.js`, объект `echoSetToCharacters`.
-Там можно добавлять/удалять сеты и персонажей.
+The dictionary lives in `popup.js` as `echoSetToCharacters`.
+You can add/remove sets and characters there.
 
-## Как добавить иконки
+## Add icons
 
-### Иконки Echo-сетов
-Положи файлы в формате `.webp` (или `.png`) в папку `assets/echo-set-icons/`  
-Имя файла должно быть в формате kebab-case (например: `celestial-light.webp`)
+### Echo set icons
+Place `.webp` (or `.png`) files in `assets/echo-set-icons/`  
+File names should be kebab-case (example: `celestial-light.webp`).
 
-### Иконки персонажей
-Положи файлы в формате `.webp` (или `.png`) в папку `assets/character-icons/`  
-Полный список имён файлов смотри в `assets/character-icons/README.md`
+### Character icons
+Place `.webp` (or `.png`) files in `assets/character-icons/`  
+See the full file name list in `assets/character-icons/README.md`.
 
-Рекомендуемые размеры:
-- Echo-сеты: 64x64 или 128x128
-- Персонажи: 128x128 или 256x256 (отображаются как 70x70)
+Recommended sizes:
+- Echo sets: 64x64 or 128x128
+- Characters: 128x128 or 256x256 (rendered at 70x70)

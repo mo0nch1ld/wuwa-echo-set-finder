@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "WUWA Echo Set Finder",
-  "description": "Показывает, для каких персонажей используется выбранный Echo-сет в Wuthering Waves.",
+  "description": "Shows which characters use the selected Echo set in Wuthering Waves.",
   "version": "1.0.0",
   "action": {
     "default_title": "WUWA Echo Set Finder",
