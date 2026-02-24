@@ -5,6 +5,20 @@ Opera extension (Chrome Extension Manifest V3 compatible):
 - pick an Echo set in the popup;
 - see the list of characters that use it.
 
+## Run as a local website
+
+1. Open this folder in VS Code.
+2. Install dependencies:
+	- `npm install`
+3. Start local server:
+	- `npm run dev`
+4. Open `http://localhost:5500/index.html` in your browser.
+
+Alternative without npm:
+- `python -m http.server 5500`
+
+The selected Echo set is saved in browser `localStorage`.
+
 ## Install in Opera
 
 1. Open `opera://extensions`.

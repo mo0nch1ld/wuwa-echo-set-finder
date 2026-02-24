@@ -30,58 +30,57 @@ const selectedSetIcon = document.getElementById("selectedSetIcon");
 const selectedSetName = document.getElementById("selectedSetName");
 const setList = document.getElementById("echoSetList");
 const charactersList = document.getElementById("characters");
-const hint = document.getElementById("hint");
+const hasChromeStorage = typeof chrome !== "undefined" && chrome.storage && chrome.storage.local;
 
 function getSetSlug(setName) {
   return setName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 }
 
-async function getAvailableIconPath(setName) {
+function getSetIconCandidates(setName) {
   const slug = getSetSlug(setName);
-  const formats = ["webp", "png"];
-
-  for (const format of formats) {
-    const path = `assets/echo-set-icons/${slug}.${format}`;
-    try {
-      const response = await fetch(path, { method: "HEAD" });
-      if (response.ok) {
-        return path;
-      }
-    } catch (e) {
-      // fallthrough to next format
-    }
-  }
-
-  return `assets/echo-set-icons/${slug}.webp`;
+  return [
+    `assets/echo-set-icons/${slug}.webp`,
+    `assets/echo-set-icons/${slug}.png`,
+  ];
 }
 
 function getCharacterSlug(characterName) {
   return characterName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 }
 
-async function getAvailableCharacterIconPath(characterName) {
+function getCharacterIconCandidates(characterName) {
   let slug = getCharacterSlug(characterName);
-  
-  // Unified icons for Rovers
+
   if (characterName.includes("Rover")) {
     slug = "rover";
   }
-  
-  const formats = ["webp", "png"];
 
-  for (const format of formats) {
-    const path = `assets/character-icons/${slug}.${format}`;
-    try {
-      const response = await fetch(path, { method: "HEAD" });
-      if (response.ok) {
-        return path;
+  return [
+    `assets/character-icons/${slug}.webp`,
+    `assets/character-icons/${slug}.png`,
+  ];
+}
+
+function setImageFromCandidates(image, candidates, onMissing) {
+  let index = 0;
+
+  function tryNext() {
+    if (index >= candidates.length) {
+      if (onMissing) {
+        onMissing();
       }
-    } catch (e) {
-      // fallthrough to next format
+      return;
     }
+
+    image.onerror = () => {
+      index += 1;
+      tryNext();
+    };
+
+    image.src = candidates[index];
   }
 
-  return null;
+  tryNext();
 }
 
 function toggleDropdown(open) {
@@ -103,11 +102,8 @@ function selectSet(setName) {
   selectedSetName.textContent = setName;
   persistSelection(setName);
   toggleDropdown(false);
-
-  getAvailableIconPath(setName).then((path) => {
-    selectedSetIcon.src = path;
-    selectedSetIcon.alt = `${setName} icon`;
-  });
+  selectedSetIcon.alt = `${setName} icon`;
+  setImageFromCandidates(selectedSetIcon, getSetIconCandidates(setName));
 }
 
 function renderSetList(setNames) {
@@ -126,10 +122,7 @@ function renderSetList(setNames) {
 
     icon.className = "set-icon";
     icon.alt = `${setName} icon`;
-
-    getAvailableIconPath(setName).then((path) => {
-      icon.src = path;
-    });
+    setImageFromCandidates(icon, getSetIconCandidates(setName));
 
     name.className = "set-name";
     name.textContent = setName;
@@ -161,13 +154,8 @@ function renderCharacters(setName) {
     frame.className = "character-frame";
     icon.className = "character-icon";
     icon.alt = `${name} icon`;
-
-    getAvailableCharacterIconPath(name).then((path) => {
-      if (path) {
-        icon.src = path;
-      } else {
-        icon.style.display = "none";
-      }
+    setImageFromCandidates(icon, getCharacterIconCandidates(name), () => {
+      icon.style.display = "none";
     });
 
     nameSpan.className = "character-name";
@@ -181,10 +169,27 @@ function renderCharacters(setName) {
 }
 
 function persistSelection(setName) {
-  chrome.storage.local.set({ selectedEchoSet: setName });
+  if (hasChromeStorage) {
+    chrome.storage.local.set({ selectedEchoSet: setName });
+    return;
+  }
+
+  window.localStorage.setItem("selectedEchoSet", setName);
 }
 
-function init() {
+function getSavedSelection() {
+  if (hasChromeStorage) {
+    return new Promise((resolve) => {
+      chrome.storage.local.get(["selectedEchoSet"], (result) => {
+        resolve(result.selectedEchoSet || null);
+      });
+    });
+  }
+
+  return Promise.resolve(window.localStorage.getItem("selectedEchoSet"));
+}
+
+async function init() {
   const setNames = Object.keys(echoSetToCharacters).sort((a, b) => a.localeCompare(b));
 
   renderSetList(setNames);
@@ -203,17 +208,15 @@ function init() {
     }
   });
 
-  chrome.storage.local.get(["selectedEchoSet"], (result) => {
-    const savedSet = result.selectedEchoSet;
-    if (savedSet && echoSetToCharacters[savedSet]) {
-      selectSet(savedSet);
-      return;
-    }
+  const savedSet = await getSavedSelection();
+  if (savedSet && echoSetToCharacters[savedSet]) {
+    selectSet(savedSet);
+    return;
+  }
 
-    if (setNames.length > 0 && echoSetToCharacters[setNames[0]]) {
-      selectSet(setNames[0]);
-    }
-  });
+  if (setNames.length > 0 && echoSetToCharacters[setNames[0]]) {
+    selectSet(setNames[0]);
+  }
 }
 
 init();

@@ -1,0 +1,13 @@
+{
+  "name": "wuwa-echo-finder-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local website version of WUWA Echo Set Finder",
+  "scripts": {
+    "dev": "serve . -l 5500",
+    "start": "serve . -l 5500"
+  },
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}
